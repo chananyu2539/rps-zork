@@ -28,6 +28,17 @@ public class Player {
 
     private int hp = 100;
 
+    public boolean flee(){
+        if(this.isBattle){
+            this.hp -= 5;
+            this.target = null;
+            this.x = fleePos[0];
+            this.y = fleePos[1];
+            return true;
+        }
+        return false;
+    }
+
 
     private int hasSilencePotion(){
         for (int i = 0; i < BAG_SIZE;i++){

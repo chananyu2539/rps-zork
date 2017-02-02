@@ -30,7 +30,7 @@ public class ZorkGame {
                 put("go west", new MoveWestCommand());
                 put("go south", new MoveSouthCommand());
 
-//                put("flee", new FleeCommand());
+                put("flee", new FleeCommand());
 
                 put("attack", new AttackCommand());
                 put("rock",new RockCommand());
