@@ -2,6 +2,7 @@ package rps.command;
 
 import rps.Player;
 import rps.Room;
+import rps.ZorkGame;
 
 /**
  * Created by chananyu2539 on 2/1/2017 AD.
@@ -10,8 +11,8 @@ public class LookAroundCommand implements Command {
 
     private Player player;
 
-    public LookAroundCommand(Player p){
-        this.player = p;
+    public LookAroundCommand(){
+        this.player = ZorkGame.getInstance();
     }
 
     @Override

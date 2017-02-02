@@ -9,15 +9,11 @@ import java.util.*;
 public class Room {
     private final static int MAX_ITEMS = 3;
     private Item[] itemList = new Item[MAX_ITEMS];
-    private Map<String,Room> neighbors = new HashMap<String,Room>();
+    private Map<String,Room> neighbors = new HashMap<>();
     private Guardian guardian = null;
 
     public boolean canGo(String dir){
         return neighbors.containsKey(dir);
-    }
-
-    public boolean containGuardian(String inName){
-        return inName.equals(guardian.getName());
     }
 
     public void setGuardian(Guardian guardian){

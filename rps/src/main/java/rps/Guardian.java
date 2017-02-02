@@ -18,16 +18,22 @@ public class Guardian extends InteractObj{
         return this.name;
     }
 
+    public void lose(){
+        this.hp -= 10;
+    }
+
 
     @Override
     public String getInfo() {
         return "Guardian, Name: "+this.name+", HP: "+this.hp;
     }
 
-    public boolean isAlive(){
-        return this.hp > 0;
+    public boolean isDead(){
+        return this.hp <= 0;
     }
 
 
-
+    public int getHP() {
+        return this.hp;
+    }
 }

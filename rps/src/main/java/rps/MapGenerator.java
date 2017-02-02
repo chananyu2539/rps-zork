@@ -33,7 +33,7 @@ public class MapGenerator {
 
         Room room03 = new Room();
         room03.setGuardian(new Guardian("Apprentice Guardian B",40));
-        room03.addObj(new Potion("paper"));
+        room03.addObj(new Potion("rock"));
 
 
         Room room23 = new Room();

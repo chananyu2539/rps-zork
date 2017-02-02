@@ -8,53 +8,104 @@ import java.util.*;
  */
 public class Player {
 
-    private static String target = "";
+    private int BAG_SIZE = 6;
 
-    public static boolean isBattle = false;
+    private Guardian target = null;
 
-    private static int[] fleePos = new int[2];
+    private boolean canDebuff = false;
 
-    private static int x = 2;
-    private static int y = 0;
-    private static int floor = 1;
+    public boolean isBattle = false;
 
-    private static final Item[] itemBags = new Item[6];
+    private final int[] fleePos = new int[2];
 
-    private static ArrayList<String> questBag;
+    private int x = 2;
+    private int y = 0;
+    private int floor = 1;
 
-    private static int HP = 100;
+    private final Item[] itemBags = new Item[BAG_SIZE];
+
+    private final ArrayList<String> questBag = new ArrayList<>();
+
+    private int hp = 100;
 
 
-
-    private boolean isValidMovableInput(String dir) {
-        String[] possibleDirection = {"north","east","west","south"};
-        String lowerInput = dir.toLowerCase();
-        return Arrays.asList(possibleDirection).contains(lowerInput);
+    private int hasSilencePotion(){
+        for (int i = 0; i < BAG_SIZE;i++){
+            if(itemBags[i]!=null & itemBags[i].getName().equals("debuff potion")){
+                return i;
+            }
+        }
+        return -1;
     }
+
+    public int useSilencePotion(){
+        int itemSlot = hasSilencePotion();
+        if(itemSlot==-1){
+            return -2;
+        }
+        else {
+            if (this.canDebuff) {
+                return 0;
+            }
+             else {
+                itemBags[itemSlot] = null;
+                this.canDebuff = true;
+                return 1;
+            }
+        }
+    }
+
+    private int hasHealPotion(){
+        for (int i = 0; i < BAG_SIZE;i++){
+            if(itemBags[i]!=null & itemBags[i].getName().equals("healing potion")){
+                return i;
+            }
+        }
+        return -1;
+    }
+    public int useHealPotion(){
+        int itemSlot = hasHealPotion();
+        if(itemSlot==-1){
+            return -2;
+        }
+        else {
+            if (this.hp == 100) {
+                return 0;
+            } else if (this.hp == 95) {
+                itemBags[itemSlot] = null;
+                this.hp += 5;
+                return 1;
+            } else {
+                itemBags[itemSlot] = null;
+                this.hp += 10;
+                return 1;
+            }
+        }
+    }
+
+
 
     private boolean isRoomValidMove(String dir){
         Room currentRoom = WorldMap.worldMap.get(floor)[x][y];
         return currentRoom.canGo(dir);
     }
 
-    private int move(String dir){
+    public int move(String dir){
         if(!isBattle){
             dir = dir.toLowerCase();
-            if(isValidMovableInput(dir) && isRoomValidMove(dir)){
+            if(isRoomValidMove(dir)){
                 fleePos[0] = this.x;
                 fleePos[1] = this.y;
                 switch (dir){
                     case "north":
-                        this.y-=1;
-                    case "east":
-                        this.x+=1;
-                    case "west":
                         this.x-=1;
-                    case "south":
+                    case "east":
                         this.y+=1;
+                    case "west":
+                        this.y-=1;
+                    case "south":
+                        this.x+=1;
                 }
-
-
                 return 1;
             }
             return -1;
@@ -94,11 +145,13 @@ public class Player {
         return "shouldn't reach here";
     }
 
-    public boolean isValidAttack(String target){
+    public boolean validAttack(){
         Room currentRoom = WorldMap.worldMap.get(floor)[x][y];
-        if(target.equals(currentRoom.getGuardian().getName())) {
-            isBattle = true;
-            this.target = target;
+
+        Guardian currentGuardian = currentRoom.getGuardian();
+
+        if(currentGuardian!=null){
+            this.target = currentGuardian;
             return true;
         }
         return false;
@@ -108,9 +161,30 @@ public class Player {
         if(this.isBattle) {
             choice = choice.toLowerCase();
             String enemy = genComputer();
-            return compareChoice(choice, enemy);
+            if(this.canDebuff){
+                while (enemy.equals("rock")){
+                    enemy = genComputer();
+                }
+            }
+            int status = compareChoice(choice, enemy);
+            if(status==1){
+                this.target.lose();
+                if(target.isDead()){
+                    getCurrentRoom().setGuardian(null);
+                }
+                this.isBattle = false;
+            }
+            else if(status==-1){
+                lose();
+
+            }
+            return status;
         }
         return -2;
+    }
+
+    private void lose() {
+        this.hp -= 5;
     }
 
     public boolean canCollectItem(){
@@ -122,7 +196,7 @@ public class Player {
         return false;
     }
 
-    public int isValidCollect(String item){
+    private int isValidCollect(String item){
         Room currentRoom = WorldMap.worldMap.get(floor)[x][y];
         Item[] allItem = currentRoom.getItemList();
         for(int i = 0;i<allItem.length;i++){
@@ -150,9 +224,20 @@ public class Player {
     }
 
     public String checkHP(){
-        return ""+this.HP;
+        return ""+this.hp;
+    }
+
+    public String checkBag(){
+        String rs = "";
+        int slot = 1;
+        for( Item item : itemBags){
+            rs += slot + " =>" + item.getInfo()+"\n";
+        }
+        return rs;
     }
 
 
-
+    public boolean isDead() {
+        return this.hp <= 0;
+    }
 }

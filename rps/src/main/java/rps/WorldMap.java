@@ -9,15 +9,15 @@ import java.util.Map;
  */
 public class WorldMap {
     public static final Map<Integer,Room[][]> worldMap = new HashMap<Integer, Room[][]>();
-    public static final Room[][] firstFloor = (new MapGenerator()).firstFloorGenerator();
+    private static final Room[][] firstFloor = (new MapGenerator()).firstFloorGenerator();
 
-    public static final Room[][] secondFloor = new Room[3][3];
+    private static final Room[][] secondFloor = new Room[3][3];
 
-    public static final Room[][] thirdFloor = new Room[2][1];
+    private static final Room[][] thirdFloor = new Room[2][1];
 
-    static {
+    {
         worldMap.put(1,firstFloor);
-        worldMap.put(2,thirdFloor);
+        worldMap.put(2,secondFloor);
         worldMap.put(3,thirdFloor);
 
     }
