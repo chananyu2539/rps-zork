@@ -20,9 +20,9 @@ public class Player {
 
     private final int[] fleePos = new int[2];
 
-    private int x = 1;
+    private int x = 2;
     private int y = 0;
-    private int floor = 3;
+    private int floor = 1;
 
     private final Item[] itemBags = new Item[BAG_SIZE];
 
@@ -30,8 +30,22 @@ public class Player {
 
     private int hp = 100;
 
+    public void setX(int x){
+        this.x = x;
+    }
+
+    public void setY(int y){
+        this.y = y;
+    }
+
+    public void setFloor(int f){
+        this.floor = f;
+    }
+
+
 
     public int combineKey(){
+
         if(!getCurrentRoom().canProceed())
             return 0;
         if(questBag.contains("key1")&&questBag.contains("key2")){
