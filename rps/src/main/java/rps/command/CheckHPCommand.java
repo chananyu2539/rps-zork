@@ -15,7 +15,7 @@ public class CheckHPCommand implements Command {
     }
 
     @Override
-    public void apply() {
+    public void apply(String s) {
         System.out.println(player.checkHP());
     }
 

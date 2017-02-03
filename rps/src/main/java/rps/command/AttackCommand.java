@@ -15,7 +15,7 @@ public class AttackCommand implements Command {
     }
 
     @Override
-    public void apply() {
+    public void apply(String s) {
         if(player.validAttack()){
             System.out.println("Engage in fight");
         }else {

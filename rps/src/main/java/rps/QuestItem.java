@@ -12,7 +12,7 @@ public class QuestItem extends Item {
 
     @Override
     public String getInfo() {
-        return ""+this.key;
+        return "key: "+this.key;
     }
 
     @Override

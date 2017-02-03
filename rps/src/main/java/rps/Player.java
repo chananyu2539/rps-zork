@@ -10,6 +10,8 @@ public class Player {
 
     private int BAG_SIZE = 6;
 
+    private WorldMap playerMap = new WorldMap();
+
     private Guardian target = null;
 
     private boolean canDebuff = false;
@@ -18,9 +20,9 @@ public class Player {
 
     private final int[] fleePos = new int[2];
 
-    private int x = 2;
+    private int x = 1;
     private int y = 0;
-    private int floor = 1;
+    private int floor = 3;
 
     private final Item[] itemBags = new Item[BAG_SIZE];
 
@@ -28,29 +30,44 @@ public class Player {
 
     private int hp = 100;
 
+
+    public int combineKey(){
+        if(!getCurrentRoom().canProceed())
+            return 0;
+        if(questBag.contains("key1")&&questBag.contains("key2")){
+            questBag.remove("key1");
+            questBag.remove("key2");
+            return 1;
+        }
+        else
+            return -1;
+    }
+
     public boolean flee(){
         if(this.isBattle){
             this.hp -= 5;
             this.target = null;
             this.x = fleePos[0];
             this.y = fleePos[1];
+            this.isBattle = false;
             return true;
         }
         return false;
     }
 
 
-    private int hasSilencePotion(){
+
+    private int hasDebuffPotion(){
         for (int i = 0; i < BAG_SIZE;i++){
-            if(itemBags[i]!=null & itemBags[i].getName().equals("debuff potion")){
+            if(itemBags[i]!=null && itemBags[i].getName().equals("debuff potion")){
                 return i;
             }
         }
         return -1;
     }
 
-    public int useSilencePotion(){
-        int itemSlot = hasSilencePotion();
+    public int useDebuffPotion(){
+        int itemSlot = hasDebuffPotion();
         if(itemSlot==-1){
             return -2;
         }
@@ -68,7 +85,7 @@ public class Player {
 
     private int hasHealPotion(){
         for (int i = 0; i < BAG_SIZE;i++){
-            if(itemBags[i]!=null & itemBags[i].getName().equals("healing potion")){
+            if(itemBags[i]!=null && itemBags[i].getName().equals("healing potion")){
                 return i;
             }
         }
@@ -94,29 +111,29 @@ public class Player {
         }
     }
 
-
-
     private boolean isRoomValidMove(String dir){
-        Room currentRoom = WorldMap.worldMap.get(floor)[x][y];
+        Room currentRoom = this.playerMap.worldMap.get(floor)[x][y];
         return currentRoom.canGo(dir);
     }
 
     public int move(String dir){
         if(!isBattle){
+            if(!getCurrentRoom().canProceed())
+                return -2;
             dir = dir.toLowerCase();
             if(isRoomValidMove(dir)){
                 fleePos[0] = this.x;
                 fleePos[1] = this.y;
-                switch (dir){
-                    case "north":
-                        this.x-=1;
-                    case "east":
-                        this.y+=1;
-                    case "west":
-                        this.y-=1;
-                    case "south":
-                        this.x+=1;
-                }
+
+                if(dir.equals("north"))
+                    this.x -= 1;
+                else if(dir.equals("east"))
+                    this.y+=1;
+                else if(dir.equals("west"))
+                    this.y-=1;
+                else if(dir.equals("south"))
+                    this.x+=1;
+
                 return 1;
             }
             return -1;
@@ -157,12 +174,13 @@ public class Player {
     }
 
     public boolean validAttack(){
-        Room currentRoom = WorldMap.worldMap.get(floor)[x][y];
+        Room currentRoom = this.playerMap.worldMap.get(floor)[x][y];
 
         Guardian currentGuardian = currentRoom.getGuardian();
 
         if(currentGuardian!=null){
             this.target = currentGuardian;
+            this.isBattle = true;
             return true;
         }
         return false;
@@ -177,13 +195,15 @@ public class Player {
                     enemy = genComputer();
                 }
             }
+            this.canDebuff=false;
             int status = compareChoice(choice, enemy);
             if(status==1){
                 this.target.lose();
                 if(target.isDead()){
                     getCurrentRoom().setGuardian(null);
+                    this.isBattle = false;
+                    return 4;
                 }
-                this.isBattle = false;
             }
             else if(status==-1){
                 lose();
@@ -198,17 +218,17 @@ public class Player {
         this.hp -= 5;
     }
 
-    public boolean canCollectItem(){
+    public int itemEmptySlot(){
         for(int i = 0 ;i<6;i++){
             if (itemBags[i] == null){
-                return true;
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
     private int isValidCollect(String item){
-        Room currentRoom = WorldMap.worldMap.get(floor)[x][y];
+        Room currentRoom = this.playerMap.worldMap.get(floor)[x][y];
         Item[] allItem = currentRoom.getItemList();
         for(int i = 0;i<allItem.length;i++){
             Item currentItem = allItem[i];
@@ -220,13 +240,40 @@ public class Player {
         return -1;
     }
 
-    public Room getCurrentRoom(){
-        return WorldMap.worldMap.get(floor)[x][y];
+    public int collect(String item,int i){
+        int targetSlot = isValidCollect(item);
+        if (targetSlot > -1) {
+            Item[] roomItem = getCurrentRoom().getItemList();
+
+            if(item.contains("potion")) {
+                itemBags[i] = roomItem[targetSlot];
+                roomItem[targetSlot] = null;
+                return 1;
+            }
+            else {
+                questBag.add(item);
+                roomItem[targetSlot] = null;
+
+                return 0;
+            }
+
+        }
+        else {
+            return -1;
+        }
     }
 
 
-    public void dropItem(int i){
+    public Room getCurrentRoom(){
+        return this.playerMap.worldMap.get(floor)[x][y];
+    }
+
+
+    public boolean dropItem(int i){
+        if(itemBags[i]==null)
+            return false;
         itemBags[i] = null;
+        return true;
     }
 
     public int[] checkPos(){
@@ -240,15 +287,45 @@ public class Player {
 
     public String checkBag(){
         String rs = "";
-        int slot = 1;
+        int slot = 0;
         for( Item item : itemBags){
-            rs += slot + " =>" + item.getInfo()+"\n";
+            if(item!=null)
+                rs += slot + " =>" + item.getInfo()+"\n";
+            slot+=1;
         }
         return rs;
     }
 
 
+    public boolean canGoSecondFloor(){
+        Room finalRoom = this.playerMap.getFirstBossRoom();
+        return finalRoom.getGuardian()==null;
+    }
+
+    public void goSecondFloor(){
+        this.floor = 2;
+        this.x = 1;
+        this.y = 1;
+
+    }
+
+    public int getFloor(){
+        return this.floor;
+    }
+
+
     public boolean isDead() {
         return this.hp <= 0;
+    }
+
+    public void goThirdFloor() {
+        this.floor = 3;
+        this.x = 1;
+        this.y = 0;
+    }
+
+    public boolean clearFinalBoss() {
+        Room lastRoom = this.playerMap.getLastBossRoom();
+        return lastRoom.getGuardian()==null;
     }
 }

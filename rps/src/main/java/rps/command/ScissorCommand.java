@@ -14,8 +14,8 @@ public class ScissorCommand implements Command {
     }
 
     @Override
-    public void apply() {
-        int result = player.attackWith("scissor");
+    public void apply(String s) {
+        int result = player.attackWith("scissors");
         if(result == -2){
             System.out.println("You are not in the battle");
         }
@@ -24,13 +24,21 @@ public class ScissorCommand implements Command {
         }
         else if(result==0){
             System.out.println("It's a Draw");
+        }else if(result==4){
+            System.out.println("You win. Your enemy is now dead.");
         }
         else {
             System.out.println("You lose. Your health is "+player.checkHP());
             if(player.isDead()){
                 System.out.println("Sorry, you died");
-                new ExitCommand().apply();
+                new ExitCommand().apply("");
             }
+        }
+        if(player.getFloor()==1 && player.canGoSecondFloor()){
+            player.goSecondFloor();
+            System.out.println("Congratulation, the final boss of first floor is dead.");
+            System.out.println("You are now proceeding to the second floor");
+            new LookAroundCommand().apply("");
         }
     }
 }

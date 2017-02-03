@@ -14,7 +14,7 @@ public class PositionCommand implements Command {
     }
 
     @Override
-    public void apply() {
+    public void apply(String s) {
         int coordinate[] = player.checkPos();
         System.out.println("x: "+coordinate[1]+", y: "+coordinate[0]);
     }

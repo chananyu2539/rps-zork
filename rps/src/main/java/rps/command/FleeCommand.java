@@ -14,11 +14,11 @@ public class FleeCommand implements Command {
     }
 
     @Override
-    public void apply() {
+    public void apply(String s) {
         boolean fleeable = player.flee();
         if(fleeable){
             System.out.println("You flee to the older room, but your hp was reduced by 5");
-            System.out.println("Your current hp is" + player.checkHP());
+            System.out.println("Your current hp is " + player.checkHP());
         }
         else {
             System.out.println("You are not in the battle");

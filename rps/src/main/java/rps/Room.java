@@ -8,9 +8,10 @@ import java.util.*;
  */
 public class Room {
     private final static int MAX_ITEMS = 3;
-    private Item[] itemList = new Item[MAX_ITEMS];
-    private Map<String,Room> neighbors = new HashMap<>();
+    private final Item[] itemList = new Item[MAX_ITEMS];
+    private final Map<String,Room> neighbors = new HashMap<>();
     private Guardian guardian = null;
+
 
     public boolean canGo(String dir){
         return neighbors.containsKey(dir);
@@ -24,7 +25,7 @@ public class Room {
         return this.guardian;
     }
     public Item[] getItemList(){
-        return this.getItemList();
+        return this.itemList;
     }
 
 
@@ -46,7 +47,11 @@ public class Room {
             if(obj!=null)
                 rs += obj.getInfo() +"\n";
         }
-        rs+="\n============================= \n";
+        if(this.guardian != null) {
+            rs += "\n======================================= \n";
+            rs += "\nHas guardian: " + getGuardian().getInfo()+"\n";
+        }
+        rs+="\n======================================= \n";
         rs += "\nYou can go the other room in following direction(s): \n";
         for (String s: neighbors.keySet()){
             rs+=s+" \n";
@@ -65,6 +70,10 @@ public class Room {
 
         }
 
+    }
+
+    public boolean canProceed(){
+        return this.guardian == null;
     }
 
 }

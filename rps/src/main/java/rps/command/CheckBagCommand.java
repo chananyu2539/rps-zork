@@ -15,7 +15,8 @@ public class CheckBagCommand implements Command {
     }
 
     @Override
-    public void apply() {
+    public void apply(String s) {
+        System.out.println("Your item bag contain: ");
         System.out.println(player.checkBag());
     }
 }

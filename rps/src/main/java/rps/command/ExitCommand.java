@@ -5,7 +5,7 @@ package rps.command;
  */
 public class ExitCommand implements Command {
     @Override
-    public void apply() {
+    public void apply(String s) {
         System.out.println("Quitting game");
         System.exit(0);
     }
