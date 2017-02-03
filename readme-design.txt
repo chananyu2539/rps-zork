@@ -1,9 +1,15 @@
 Abstract InteractObj --> Guardian + Item
-    - this is because I want to put these two objects into the same list that each room will store the objects in.
+    - this is because I want to put these two objects to both have some method that required to be the same for printing information
 
-Character can access interact with items by attribute Bags through slot number of bag
+Wrapper --> Item -> QuestItem + Potion
+    - this will allow me to store both QuestItem and Potion to the same ItemList for each room
 
-getInfo on InteractObj class -> so that all succeeding class have to implement this method which required for character to inspect()
+
+CommandFactory 
+    - To organize and function all command so that each of them match what the input of user. It also allow parameterization.
+
+Singleton Player
+    - as it's single player game, this allow the Player class to be identical for the rest of the game.
 
 
 

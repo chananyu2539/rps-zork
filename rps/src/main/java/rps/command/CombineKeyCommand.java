@@ -17,7 +17,9 @@ public class CombineKeyCommand implements Command {
     public void apply(String s) {
         int status = player.combineKey();
         if(status == 1){
+            System.out.println("Creating portal..........");
             player.goThirdFloor();
+            new LookAroundCommand().apply("");
         }
         else if(status==0){
             System.out.println("You have to defeat the Guardian first");

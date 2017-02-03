@@ -56,7 +56,7 @@ public class ZorkGame {
         return commands.get(name);
     }
 
-    public static void main(String[] args){
+    public static void run(){
 
 
 //        System.out.println(player.getCurrentRoom().getInfo());
@@ -64,6 +64,7 @@ public class ZorkGame {
         Scanner scanner = new Scanner(System.in);
         boolean quit = false;
         System.out.println("Zork: Welcome to RPS-Zork game");
+        System.out.println("Zork: You are currently at the first floor, please find your way out and defeat final boss at thrid floor :)");
                 System.out.println(player.getCurrentRoom().getInfo());
 
         while (!quit) {

@@ -44,7 +44,7 @@
               <transformers>
                 <!-- add Main-Class to manifest file -->
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>rps.ZorkGame</mainClass>
+                  <mainClass>rps.ZorkGameRunner</mainClass>
                 </transformer>
               </transformers>
             </configuration>
