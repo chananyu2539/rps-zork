@@ -5,8 +5,8 @@ Game consists of three level:
 
 ===================================================================================================================== 
 
-Map:
-o = room, x = no room
+Map: o = room, x = no room
+
 
             xoxo
 1st floor:  oooo

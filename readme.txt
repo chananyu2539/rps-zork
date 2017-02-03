@@ -7,7 +7,7 @@
 3.) compile by type following command:
 mvn package
 
-4.) cd to “target" directory
+4.) cd to 'target' directory
 
 5.) run this command: java -jar rps-game.jar
 
