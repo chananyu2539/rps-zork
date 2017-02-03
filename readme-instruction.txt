@@ -36,8 +36,9 @@ flee => to escape from the current room the the last visited one
 position => check the current postion of the character
 checkbag => check all item inside your bag
 checkhp => check current HP of the player
-quit => quit the game :(
 combine => combine quest key to move to final boss room
+quit => quit the game :(
+
 
 ===================================================================================================================== 
 

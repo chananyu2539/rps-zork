@@ -2,7 +2,7 @@
 
 1.) git clone this github
 
-2.) cd to cloned/'rps' directory
+2.) cd to 'rps-zork/rps' directory
 
 3.) compile by type following command:
 mvn package
