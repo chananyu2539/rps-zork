@@ -42,5 +42,9 @@ public class PaperCommand implements Command {
             System.out.println("You are now proceeding to the second floor");
             new LookAroundCommand().apply("");
         }
+        else if(player.getFloor()==3 && player.clearFinalBoss()){
+            System.out.println("You've done it. Congratulation on your escapes");
+            new ExitCommand().apply("");
+        }
     }
 }
