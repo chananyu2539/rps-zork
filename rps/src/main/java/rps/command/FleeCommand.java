@@ -19,6 +19,10 @@ public class FleeCommand implements Command {
         if(fleeable){
             System.out.println("You flee to the older room, but your hp was reduced by 5");
             System.out.println("Your current hp is " + player.checkHP());
+            if(player.isDead()){
+                System.out.println("Sorry, you died");
+                new ExitCommand().apply("");
+            }
         }
         else {
             System.out.println("You are not in the battle");
